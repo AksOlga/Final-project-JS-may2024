@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Details</title>
+    <style>
+        .user-details {
+            margin: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .posts-container {
+            margin: 20px;
+        }
+        .post-block {
+            display: inline-block;
+            width: 18%;
+            margin: 1%;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .post-block a {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 5px 0;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        .load-posts-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 0;
+            width: 90%;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="userDetails" class="user-details"></div>
+<a href="#" id="loadPostsBtn" class="load-posts-btn">Post of Current User</a>
+<div id="postsContainer" class="posts-container"></div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('userId');
+
+    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+        .then(response => response.json())
+        .then(user => {
+            const userDetails = document.getElementById('userDetails');
+            userDetails.innerHTML = `
+                    <h2>User ID: ${user.id}</h2>
+                    <h3>Name: ${user.name}</h3>
+                    <p>Username: ${user.username}</p>
+                    <p>Email: ${user.email}</p>
+                    <p>Phone: ${user.phone}</p>
+                    <p>Website: ${user.website}</p>
+                    <p>Company: ${user.company.name}</p>
+                    <p>Address: ${user.address.street}, ${user.address.city}</p>
+                `;
+        });
+
+    document.getElementById('loadPostsBtn').addEventListener('click', function(event) {
+        event.preventDefault();
+        fetch(`https://jsonplaceholder.typicode.com/users/${userId}/posts`)
+            .then(response => response.json())
+            .then(posts => {
+                const postsContainer = document.getElementById('postsContainer');
+                postsContainer.innerHTML = '';
+                posts.forEach(post => {
+                    const postBlock = document.createElement('div');
+                    postBlock.classList.add('post-block');
+                    postBlock.innerHTML = `
+                            <h4>${post.title}</h4>
+                            <a href="post-details.html?postId=${post.id}">View Post Details</a>
+                        `;
+                    postsContainer.appendChild(postBlock);
+                });
+            });
+    });
+</script>
+</body>
+</html>

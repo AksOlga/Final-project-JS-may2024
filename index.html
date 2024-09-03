@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Users</title>
+    <style>
+        .user-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .user-block {
+            width: 45%;
+            margin: 2.5%;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .user-block a {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            padding: 5px 0;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+    </style>
+
+<body>
+<div class="user-container" id="userContainer"></div>
+
+<script>
+    fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(users => {
+            const userContainer = document.getElementById('userContainer');
+            users.forEach(user => {
+                const userBlock = document.createElement('div');
+                userBlock.classList.add('user-block');
+                userBlock.innerHTML = `
+                        <h2>ID: ${user.id}</h2>
+                        <h3>Name: ${user.name}</h3>
+                        <a href="user-details.html?userId=${user.id}">View Details</a>
+                    `;
+                userContainer.appendChild(userBlock);
+            });
+        });
+</script>
+</body>
+</html>
